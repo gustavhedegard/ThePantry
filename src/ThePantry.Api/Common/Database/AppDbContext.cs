@@ -37,7 +37,6 @@ public class AppDbContext : IdentityDbContext<User, IdentityRole<Guid>, Guid>
             }
         }
 
-        // HouseholdMember - many-to-many mellan User och Household
     builder.Entity<HouseholdMember>()
         .HasOne(hm => hm.User)
         .WithMany()
@@ -50,21 +49,18 @@ public class AppDbContext : IdentityDbContext<User, IdentityRole<Guid>, Guid>
         .HasForeignKey(hm => hm.HouseholdId)
         .OnDelete(DeleteBehavior.Cascade);
 
-    // Location - hör till Household
     builder.Entity<Location>()
         .HasOne(l => l.Household)
         .WithMany()
         .HasForeignKey(l => l.HouseholdId)
         .OnDelete(DeleteBehavior.Cascade);
 
-    // Category - hör till Household
     builder.Entity<Category>()
         .HasOne(c => c.Household)
         .WithMany()
         .HasForeignKey(c => c.HouseholdId)
         .OnDelete(DeleteBehavior.Cascade);
 
-    // Product - kopplingar till Category, Location, Household
     builder.Entity<Product>()
         .HasOne(p => p.Category)
         .WithMany()
