@@ -1,0 +1,11 @@
+{
+  "ConnectionStrings": {
+    "DefaultConnection": "Host=localhost;Port=5432;Database=thepantry;Username=REPLACE_ME;Password=REPLACE_ME"
+  },
+  "Jwt": {
+    "Secret": "REPLACE_WITH_YOUR_OWN_SECRET_MIN_32_CHARS",
+    "Issuer": "ThePantry.Api",
+    "Audience": "ThePantry.Client",
+    "ExpiryMinutes": 60
+  }
+}
