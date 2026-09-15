@@ -9,6 +9,7 @@ using ThePantry.Api.Features.Auth;
 using System.Security.Claims;
 using System.IdentityModel.Tokens.Jwt;
 using ThePantry.Api.Common.ErrorHandling;
+using ThePantry.Api.Features.Households;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -62,5 +63,7 @@ app.MapGet("/auth/me", (ClaimsPrincipal user) =>
 
 app.MapRegisterEndpoint();
 app.MapLoginEndpoint();
+app.MapCreateHouseholdEndpoint();
+app.MapJoinHouseholdEndpoint();
 
 app.Run();

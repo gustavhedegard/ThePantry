@@ -49,6 +49,10 @@ public class AppDbContext : IdentityDbContext<User, IdentityRole<Guid>, Guid>
         .HasForeignKey(hm => hm.HouseholdId)
         .OnDelete(DeleteBehavior.Cascade);
 
+    builder.Entity<HouseholdMember>()
+        .HasIndex(hm => new { hm.UserId, hm.HouseholdId })
+        .IsUnique();
+
     builder.Entity<Location>()
         .HasOne(l => l.Household)
         .WithMany()
