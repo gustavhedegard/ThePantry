@@ -8,6 +8,7 @@ using ThePantry.Api.Common.Entities;
 using ThePantry.Api.Features.Auth;
 using System.Security.Claims;
 using System.IdentityModel.Tokens.Jwt;
+using ThePantry.Api.Common.ErrorHandling;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -43,9 +44,15 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
         };
     });
 
+builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
+builder.Services.AddProblemDetails();
 builder.Services.AddAuthorization();
 
 var app = builder.Build();
+
+app.UseExceptionHandler();
+app.UseAuthentication();
+app.UseAuthorization();
 
 app.MapGet("/auth/me", (ClaimsPrincipal user) =>
 {
@@ -55,8 +62,5 @@ app.MapGet("/auth/me", (ClaimsPrincipal user) =>
 
 app.MapRegisterEndpoint();
 app.MapLoginEndpoint();
-
-app.UseAuthentication();
-app.UseAuthorization();
 
 app.Run();
