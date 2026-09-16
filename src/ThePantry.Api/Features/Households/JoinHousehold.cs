@@ -19,6 +19,14 @@ public static class JoinHousehold
         {
             var userId = Guid.Parse(user.FindFirst(JwtRegisteredClaimNames.Sub)!.Value);
 
+            var alreadyInAHousehold = await dbContext.HouseholdMembers
+            .AnyAsync(hm => hm.UserId == userId);
+
+            if (alreadyInAHousehold)
+            {
+                return Results.BadRequest(new { Error = "Du tillhör redan ett hushåll." });
+            }
+
             var household = await dbContext.Households
                 .FirstOrDefaultAsync(h => h.Id == request.HouseholdId);
 

@@ -2,13 +2,25 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using ThePantry.Api.Common.Entities;
+using Microsoft.AspNetCore.Http;
+using System.IdentityModel.Tokens.Jwt;
 
 namespace ThePantry.Api.Common.Database;
 
 public class AppDbContext : IdentityDbContext<User, IdentityRole<Guid>, Guid>
 {
-    public AppDbContext(DbContextOptions<AppDbContext> options) : base(options)
+    private readonly Guid? _currentHouseholdId;
+    public AppDbContext(
+        DbContextOptions<AppDbContext> options,
+        IHttpContextAccessor httpContextAccessor) : base(options)
     {
+        var householdIdClaim = httpContextAccessor.HttpContext?.User
+            .FindFirst("household_id")?.Value;
+
+        if (Guid.TryParse(householdIdClaim, out var householdId))
+        {
+            _currentHouseholdId = householdId;
+        }
     }
 
     public DbSet<Household> Households => Set<Household>();
@@ -95,5 +107,17 @@ public class AppDbContext : IdentityDbContext<User, IdentityRole<Guid>, Guid>
         .WithMany()
         .HasForeignKey(ph => ph.HouseholdId)
         .OnDelete(DeleteBehavior.Cascade);
+
+    builder.Entity<Product>()
+        .HasQueryFilter(p => p.HouseholdId == _currentHouseholdId);
+
+    builder.Entity<Category>()
+        .HasQueryFilter(c => c.HouseholdId == _currentHouseholdId);
+
+    builder.Entity<Location>()
+        .HasQueryFilter(l => l.HouseholdId == _currentHouseholdId);
+
+    builder.Entity<ProductHistory>()
+        .HasQueryFilter(ph => ph.HouseholdId == _currentHouseholdId);
     }
 }
