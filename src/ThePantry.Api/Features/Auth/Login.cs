@@ -4,6 +4,8 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 using ThePantry.Api.Common.Entities;
+using ThePantry.Api.Common.Database;
+using Microsoft.EntityFrameworkCore;
 
 namespace ThePantry.Api.Features.Auth;
 
@@ -17,6 +19,7 @@ public static class Login
         app.MapPost("/auth/login", async (
             Request request,
             UserManager<User> userManager,
+            AppDbContext dbContext,
             IConfiguration configuration) =>
         {
             var user = await userManager.FindByEmailAsync(request.Email);
@@ -33,6 +36,11 @@ public static class Login
                 return Results.Unauthorized();
             }
 
+            var householdId = await dbContext.HouseholdMembers
+            .Where(hm => hm.UserId == user.Id)
+            .Select(hm => (Guid?)hm.HouseholdId)
+            .FirstOrDefaultAsync();
+
             var jwtSecret = configuration["Jwt:Secret"]!;
             var jwtIssuer = configuration["Jwt:Issuer"]!;
             var jwtAudience = configuration["Jwt:Audience"]!;
@@ -44,6 +52,11 @@ public static class Login
                 new(JwtRegisteredClaimNames.Email, user.Email!),
                 new(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
             };
+
+            if(householdId.HasValue)
+            {
+                claims.Add(new Claim("household_id", householdId.Value.ToString()));
+            }
 
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSecret));
             var credentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
