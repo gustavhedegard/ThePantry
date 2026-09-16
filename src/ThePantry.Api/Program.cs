@@ -10,6 +10,7 @@ using System.Security.Claims;
 using System.IdentityModel.Tokens.Jwt;
 using ThePantry.Api.Common.ErrorHandling;
 using ThePantry.Api.Features.Households;
+using ThePantry.Api.Features.Locations;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -66,5 +67,6 @@ app.MapRegisterEndpoint();
 app.MapLoginEndpoint();
 app.MapCreateHouseholdEndpoint();
 app.MapJoinHouseholdEndpoint();
+app.MapGetLocationsEndpoint();
 
 app.Run();
