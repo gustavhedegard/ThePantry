@@ -70,5 +70,6 @@ app.MapCreateHouseholdEndpoint();
 app.MapJoinHouseholdEndpoint();
 app.MapGetLocationsEndpoint();
 app.MapCreateCategoryEndpoint();
+app.MapGetCategoriesEndpoint();
 
 app.Run();
