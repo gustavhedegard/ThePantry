@@ -12,6 +12,7 @@ using ThePantry.Api.Common.ErrorHandling;
 using ThePantry.Api.Features.Households;
 using ThePantry.Api.Features.Locations;
 using ThePantry.Api.Features.Categories;
+using ThePantry.Api.Features.Products;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -71,5 +72,6 @@ app.MapJoinHouseholdEndpoint();
 app.MapGetLocationsEndpoint();
 app.MapCreateCategoryEndpoint();
 app.MapGetCategoriesEndpoint();
+app.MapCreateProductEndpoint();
 
 app.Run();
