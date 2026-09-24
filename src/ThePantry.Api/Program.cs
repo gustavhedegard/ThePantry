@@ -73,5 +73,6 @@ app.MapGetLocationsEndpoint();
 app.MapCreateCategoryEndpoint();
 app.MapGetCategoriesEndpoint();
 app.MapCreateProductEndpoint();
+app.MapGetProductsEndpoint();
 
 app.Run();
