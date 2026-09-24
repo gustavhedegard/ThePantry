@@ -74,5 +74,6 @@ app.MapCreateCategoryEndpoint();
 app.MapGetCategoriesEndpoint();
 app.MapCreateProductEndpoint();
 app.MapGetProductsEndpoint();
+app.MapDeleteProductEndpoint();
 
 app.Run();
